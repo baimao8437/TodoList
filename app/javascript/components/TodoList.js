@@ -3,8 +3,9 @@ import PropTypes from "prop-types"
 class TodoList extends React.Component {
   render () {
     return (
-      <React.Fragment>
-      </React.Fragment>
+      <div>
+        <h1>Todo List</h1>
+      </div>
     );
   }
 }
