@@ -13,4 +13,8 @@ class TodoListController < ApplicationController
         todo = Todo.find_by(key: params[:id])
         todo.update({ completed: !todo.completed })
     end
+    def destroy
+        delete_todo = Todo.find_by(key: params[:id])
+        delete_todo.destroy
+    end
 end

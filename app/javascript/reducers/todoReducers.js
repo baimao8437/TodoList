@@ -55,6 +55,14 @@ function todos(state = initState, action){
                 todos: []
             }
         case 'CLEAR_TOGGLE':
+            state.todos.map((todo)=>{
+                if(todo.completed)
+                    $.ajax({
+                        url: '/todo_list/'+todo.key,
+                        type: 'DELETE'
+                    })
+            })
+            
             return {
                 ...state,
                 todos: state.todos.filter((todo)=>(!todo.completed))
