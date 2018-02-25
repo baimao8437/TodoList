@@ -9,4 +9,8 @@ class TodoListController < ApplicationController
             completed: params[:completed]
         )
     end
+    def update
+        todo = Todo.find_by(key: params[:id])
+        todo.update({ completed: !todo.completed })
+    end
 end

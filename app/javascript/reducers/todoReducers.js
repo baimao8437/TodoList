@@ -32,6 +32,13 @@ function todos(state = initState, action){
             }
 
         case 'TOGGLE_TODO':
+            state.todos.map((todo)=>{
+                if(todo.key == action.key)
+                    $.ajax({
+                        url: '/todo_list/'+todo.key,
+                        type: 'PATCH'
+                    })
+            })
             return {
                 ...state,
                 todos: state.todos.map((todo)=>(
