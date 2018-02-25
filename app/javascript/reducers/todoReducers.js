@@ -1,17 +1,27 @@
 const initState = {
     input: '',
-    todos: []//{text,key,complete}
+    todos: []//{text,key,completed}
 }
 
 function todos(state = initState, action){
     switch(action.type){
         case 'ADD_TODO':
+            if(action.database)
+                $.ajax({
+                    url: '/todo_list',
+                    type: 'POST',
+                    data: {
+                        text: action.text,
+                        key: action.key,
+                        completed: action.completed
+                    }
+                })
             return {
                 ...state,
                 todos: [...state.todos, {
                     text: action.text,
                     key: action.key,
-                    complete: action.complete
+                    completed: action.completed
                 }]
             }
         
@@ -27,7 +37,7 @@ function todos(state = initState, action){
                 todos: state.todos.map((todo)=>(
                     (todo.key==action.key)?{
                         ...todo,
-                        complete: !todo.complete
+                        completed: !todo.completed
                     }:todo
                 ))
             }
@@ -40,7 +50,7 @@ function todos(state = initState, action){
         case 'CLEAR_TOGGLE':
             return {
                 ...state,
-                todos: state.todos.filter((todo)=>(!todo.complete))
+                todos: state.todos.filter((todo)=>(!todo.completed))
             }
 
         default:

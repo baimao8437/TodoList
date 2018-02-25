@@ -1,9 +1,10 @@
-export function addTodo(text, key, complete){
+export function addTodo(text, key, completed, database){
     return {
         type: 'ADD_TODO',
         text,
         key,
-        complete
+        completed,
+        database
     }
 }
 

@@ -25,7 +25,6 @@ class Features extends React.Component {
 class TodoList extends React.Component {
   constructor(props){
     super(props);
-    console.log(props);
     let state = store.getState();
     this.state = {
       input: state.input,
@@ -36,7 +35,6 @@ class TodoList extends React.Component {
   componentDidMount(){
     store.subscribe(()=>{
       let state = store.getState();
-      console.log(state);
       this.setState({
         input: state.input,
         todos: state.todos
@@ -44,13 +42,13 @@ class TodoList extends React.Component {
     })
     if(this.props.initTodos.length!=0){
       this.props.initTodos.map((todo)=>{
-        store.dispatch(addTodo(todo.text, todo.key,todo.completed));
+        store.dispatch(addTodo(todo.text, todo.key, todo.completed, false));
         this.state.counter=todo.key+1;
       })
     }
   }
-  handleAddTodo(text, key, complete){
-    store.dispatch(addTodo(text, key, complete));
+  handleAddTodo(text, key, completed){
+    store.dispatch(addTodo(text, key, completed, true));
     store.dispatch(inputTodo(''));
   }
   handleInputTodo(text){
@@ -59,8 +57,8 @@ class TodoList extends React.Component {
   handleToggleTodo(key){
     store.dispatch(toggleTodo(key));
   }
-  todoStyle(complete){
-    return (complete)?{
+  todoStyle(todo){
+    return (todo.completed)?{
       textDecoration: "line-through",
       cursor: "pointer"
     }:{
@@ -69,7 +67,7 @@ class TodoList extends React.Component {
   }
   render () {
     const list = this.state.todos.map((todo)=>(
-      <li key={todo.key} style={this.todoStyle(todo.complete)} onClick={()=>this.handleToggleTodo(todo.key)}>{todo.text}</li>
+      <li key={todo.key} style={this.todoStyle(todo)} onClick={()=>this.handleToggleTodo(todo.key)}>{todo.text}</li>
     ))
 
     return (
