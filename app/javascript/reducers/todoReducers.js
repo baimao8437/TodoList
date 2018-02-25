@@ -21,6 +21,28 @@ function todos(state = initState, action){
                 input: action.text
             }
 
+        case 'TOGGLE_TODO':
+            return {
+                ...state,
+                todos: state.todos.map((todo)=>(
+                    (todo.key==action.key)?{
+                        ...todo,
+                        complete: !todo.complete
+                    }:todo
+                ))
+            }
+
+        case 'CLEAR_ALL':
+            return {
+                ...state,
+                todos: []
+            }
+        case 'CLEAR_TOGGLE':
+            return {
+                ...state,
+                todos: state.todos.filter((todo)=>(!todo.complete))
+            }
+
         default:
             return state;
     }

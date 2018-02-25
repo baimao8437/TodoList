@@ -12,3 +12,10 @@ export function inputTodo(text) {
         text
     }
 }
+
+export function toggleTodo(key) {
+    return {
+        type:'TOGGLE_TODO',
+        key
+    }
+}

@@ -2,8 +2,25 @@ import React from "react"
 import PropTypes from "prop-types"
 
 // import {connect} from 'react-redux'
-import {addTodo, inputTodo} from '../actions/todoActions'
+import {addTodo, inputTodo, toggleTodo} from '../actions/todoActions'
 import store from '../store/todoStore.js'
+
+class Features extends React.Component {
+  clearAll(){
+    store.dispatch({type: 'CLEAR_ALL'});
+  }
+  clearToggle(){
+    store.dispatch({type: 'CLEAR_TOGGLE'});
+  }
+  render(){
+    return(
+      <div>
+        <button onClick={this.clearAll}>Clear All</button>
+        <button onClick={this.clearToggle}>Clear Toggled</button>
+      </div>
+    )
+  }
+}
 
 class TodoList extends React.Component {
   constructor(props){
@@ -23,22 +40,29 @@ class TodoList extends React.Component {
         todos: state.todos
       })
     })
-    this.handleAddTodo = this.handleAddTodo.bind(this);
-    this.handleInputTodo = this.handleInputTodo.bind(this);
   }
   handleAddTodo(text, key){
-    console.log("addtodo",text,key);
     store.dispatch(addTodo(text, key));
     store.dispatch(inputTodo(''));
   }
   handleInputTodo(text){
     store.dispatch(inputTodo(text));
   }
-
+  handleToggleTodo(key){
+    store.dispatch(toggleTodo(key));
+  }
+  todoStyle(complete){
+    return (complete)?{
+      textDecoration: "line-through",
+      cursor: "pointer"
+    }:{
+      cursor: "pointer"
+    }
+  }
   render () {
-    const list = this.state.todos.map((todo)=>{
-      return <li key={todo.key} data-id={todo.key}>{todo.text}</li>
-    })
+    const list = this.state.todos.map((todo)=>(
+      <li key={todo.key} style={this.todoStyle(todo.complete)} onClick={()=>this.handleToggleTodo(todo.key)}>{todo.text}</li>
+    ))
 
     return (
       <div>
@@ -49,6 +73,7 @@ class TodoList extends React.Component {
         <ul>
           {list}
         </ul>
+        <Features />
       </div>
     );
   }
