@@ -50,6 +50,12 @@ function todos(state = initState, action){
             }
 
         case 'CLEAR_ALL':
+            state.todos.map((todo)=>{
+                $.ajax({
+                    url: '/todo_list/'+todo.key,
+                    type: 'DELETE'
+                })
+            })
             return {
                 ...state,
                 todos: []
