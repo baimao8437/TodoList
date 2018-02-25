@@ -11,7 +11,7 @@ function todos(state = initState, action){
                 todos: [...state.todos, {
                     text: action.text,
                     key: action.key,
-                    complete: false
+                    complete: action.complete
                 }]
             }
         

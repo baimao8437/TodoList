@@ -25,6 +25,7 @@ class Features extends React.Component {
 class TodoList extends React.Component {
   constructor(props){
     super(props);
+    console.log(props);
     let state = store.getState();
     this.state = {
       input: state.input,
@@ -35,14 +36,21 @@ class TodoList extends React.Component {
   componentDidMount(){
     store.subscribe(()=>{
       let state = store.getState();
+      console.log(state);
       this.setState({
         input: state.input,
         todos: state.todos
       })
     })
+    if(this.props.initTodos.length!=0){
+      this.props.initTodos.map((todo)=>{
+        store.dispatch(addTodo(todo.text, todo.key,todo.completed));
+        this.state.counter=todo.key+1;
+      })
+    }
   }
-  handleAddTodo(text, key){
-    store.dispatch(addTodo(text, key));
+  handleAddTodo(text, key, complete){
+    store.dispatch(addTodo(text, key, complete));
     store.dispatch(inputTodo(''));
   }
   handleInputTodo(text){
@@ -68,7 +76,7 @@ class TodoList extends React.Component {
       <div>
         <h1>Todo List</h1>
         <input type="text" onChange={(e)=>this.handleInputTodo(e.target.value)} value={this.state.input}></input>
-        <button type="button" onClick={()=>this.handleAddTodo(this.state.input, this.state.counter++)}>Add</button>
+        <button type="button" onClick={()=>this.handleAddTodo(this.state.input, this.state.counter++, false)}>Add</button>
         <br/>
         <ul>
           {list}

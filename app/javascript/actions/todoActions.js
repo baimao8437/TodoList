@@ -1,8 +1,9 @@
-export function addTodo(text, key){
+export function addTodo(text, key, complete){
     return {
         type: 'ADD_TODO',
         text,
-        key
+        key,
+        complete
     }
 }
 
