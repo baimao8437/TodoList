@@ -1,20 +1,23 @@
 class TodoListController < ApplicationController
   def index
-    # @todos = todos.all
-    respond_with todos.all
-end
+    @todos = Todo.all
+  end
 
   def create
-    # respond_with todos.create()
+    Todo.create!(
+      text: params[:text],
+      key: params[:key],
+      completed: params[:completed]
+    )
   end
 
   def update
-    todo = todos.find(params['key'])
-    todo.update_attributes(completed: params['completed'])
-    respond_with todo
+    todo = Todo.find_by(key: params[:id])
+    todo.update(completed: !todo.completed)
   end
 
-  def destory
-    respond_with todos.destroy
+  def destroy
+    delete_todo = Todo.find_by(key: params[:id])
+    delete_todo.destroy
   end
 end

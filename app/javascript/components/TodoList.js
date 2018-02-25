@@ -22,13 +22,18 @@ class Features extends React.Component {
 
 class TodoList extends React.Component {
   constructor(props){
+    console.log(props);
     super(props);
     this.state = {
       counter: 0
     }
+    this.props.initTodos.map((todo)=>{
+      this.props.handleInitTodo(todo);
+      this.state.counter = todo.key+1;
+    })
   }
-  todoStyle(complete){
-    return (complete)?{
+  todoStyle(completed){
+    return (completed)?{
       textDecoration: "line-through",
       cursor: "pointer"
     }:{
@@ -37,14 +42,14 @@ class TodoList extends React.Component {
   }
   render () {
     const list = this.props.todos.map((todo)=>(
-      <li key={todo.key} style={this.todoStyle(todo.complete)} onClick={()=>this.props.handleToggleTodo(todo.key)}>{todo.text}</li>
+      <li key={todo.key} style={this.todoStyle(todo.completed)} onClick={()=>this.props.handleToggleTodo(todo.key)}>{todo.text}</li>
     ))
 
     return (
       <div>
         <h1>Todo List</h1>
         <input type="text" onChange={(e)=>this.props.handleInputTodo(e.target.value)} value={this.props.input}></input>
-        <button type="button" onClick={()=>this.props.handleAddTodo(this.props.input, this.state.counter++)}>Add</button>
+        <button type="button" onClick={()=>this.props.handleAddTodo(this.props.input, this.state.counter++, false)}>Add</button>
         <br/>
         <ul>
           {list}
@@ -64,8 +69,11 @@ const mapStateToProps= (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleAddTodo: (text, key)=>{
-      dispatch(addTodo(text, key));
+    handleInitTodo: (todo) =>{
+      dispatch(addTodo(todo.text, todo.key, todo.completed, false));
+    },
+    handleAddTodo: (text, key, completed)=>{
+      dispatch(addTodo(text, key, completed, true));
       dispatch(inputTodo(''));
     },
     handleInputTodo: (text)=>{
@@ -85,9 +93,9 @@ const mapDispatchToProps = (dispatch) => {
 
 const TodoListPage = connect(mapStateToProps, mapDispatchToProps)(TodoList)
 
-const TodoListApp = () => (
+const TodoListApp = (props) => (
     <Provider store={store}>
-        <TodoListPage />
+        <TodoListPage initTodos={props.initTodos}/>
     </Provider>
 )
 
