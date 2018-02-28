@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import {addTodo, inputTodo, toggleTodo} from '../actions/todoActions'
+import {addTodo, inputTodo, toggleTodo, clearAll, clearToggle} from '../actions/todoActions'
 
 import {connect} from 'react-redux'
 import { Provider } from 'react-redux'
@@ -11,10 +11,11 @@ class Features extends React.Component {
     super(props);
   }
   render(){
+    let toggleKeys = this.props.todos.filter((todo)=>(todo.completed)).map((todo)=>(todo.key))
     return(
       <div>
         <button onClick={this.props.clearAll}>Clear All</button>
-        <button onClick={this.props.clearToggle}>Clear Toggled</button>
+        <button onClick={()=>this.props.clearToggle(toggleKeys)}>Clear Toggled</button>
       </div>
     )
   }
@@ -53,7 +54,7 @@ class TodoList extends React.Component {
         <ul>
           {list}
         </ul>
-        <Features clearAll={this.props.clearAll} clearToggle={this.props.clearToggle}/>
+        <Features todos= {this.props.todos} clearAll={this.props.handleClearAll} clearToggle={this.props.handleClearToggle}/>
       </div>
     );
   }
@@ -81,11 +82,11 @@ const mapDispatchToProps = (dispatch) => {
     handleToggleTodo: (key)=>{
       dispatch(toggleTodo(key));
     },
-    clearAll: ()=>{
-      dispatch({type: 'CLEAR_ALL'});
+    handleClearAll: ()=>{
+      dispatch(clearAll());
     },
-    clearToggle: ()=>{
-      dispatch({type: 'CLEAR_TOGGLE'});
+    handleClearToggle: (keys)=>{
+      dispatch(clearToggle(keys));
     }
   }
 }

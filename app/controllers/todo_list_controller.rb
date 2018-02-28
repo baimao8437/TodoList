@@ -21,4 +21,8 @@ class TodoListController < ApplicationController
     delete_todo = Todo.find_by(key: params[:id])
     delete_todo.destroy
   end
+
+  def destroy_all
+    Todo.destroy_all
+  end
 end
