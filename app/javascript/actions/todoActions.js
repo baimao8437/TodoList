@@ -1,5 +1,12 @@
 import 'whatwg-fetch'
 
+export const ADD_TODO = 'ADD_TODO';
+export const INPUT_TODO = 'INPUT_TODO';
+export const TOGGLE_TODO = 'TOGGLE_TODO';
+export const CLEAR_ALL = 'CLEAR_ALL';
+export const CLEAR_TOGGLE = 'CLEAR_TOGGLE'
+
+
 export function addTodo(text, key, completed, database) {
     if(database)
         fetch('/todo_list',{
@@ -16,7 +23,7 @@ export function addTodo(text, key, completed, database) {
     return function (dispatch) {
         setTimeout(() => {
             dispatch({
-                type: 'ADD_TODO',
+                type: ADD_TODO,
                 text,
                 key,
                 completed,
@@ -28,7 +35,7 @@ export function addTodo(text, key, completed, database) {
 
 export function inputTodo(text) {
     return {
-        type: 'INPUT_TODO',
+        type: INPUT_TODO,
         text
     }
 }
@@ -38,7 +45,7 @@ export function toggleTodo(key) {
         method: 'PATCH'
     })
     return {
-        type: 'TOGGLE_TODO',
+        type: TOGGLE_TODO,
         key
     }
 }
@@ -48,7 +55,7 @@ export function clearAll(){
         method: 'GET'
     })
     return {
-        type: 'CLEAR_ALL'
+        type: CLEAR_ALL
     }
 }
 
@@ -59,6 +66,6 @@ export function clearToggle(keys){
         })
     })
     return {
-        type: 'CLEAR_TOGGLE'
+        type: CLEAR_TOGGLE
     }
 }

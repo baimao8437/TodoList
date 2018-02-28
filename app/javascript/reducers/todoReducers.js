@@ -1,3 +1,11 @@
+import {
+    ADD_TODO,
+    INPUT_TODO,
+    TOGGLE_TODO,
+    CLEAR_ALL,
+    CLEAR_TOGGLE
+} from '../actions/todoActions.js'
+
 const initState = {
     input: '',
     todos: []//{text,key,completed}
@@ -5,7 +13,7 @@ const initState = {
 
 function todos(state = initState, action){
     switch(action.type){
-        case 'ADD_TODO':
+        case ADD_TODO:
             return {
                 ...state,
                 todos: [...state.todos, {
@@ -15,13 +23,13 @@ function todos(state = initState, action){
                 }]
             }
         
-        case 'INPUT_TODO':
+        case INPUT_TODO:
             return {
                 ...state,
                 input: action.text
             }
 
-        case 'TOGGLE_TODO':
+        case TOGGLE_TODO:
             return {
                 ...state,
                 todos: state.todos.map((todo)=>(
@@ -32,13 +40,13 @@ function todos(state = initState, action){
                 ))
             }
 
-        case 'CLEAR_ALL':
+        case CLEAR_ALL:
             return {
                 ...state,
                 todos: []
             }
 
-        case 'CLEAR_TOGGLE':
+        case CLEAR_TOGGLE:
             return {
                 ...state,
                 todos: state.todos.filter((todo)=>(!todo.completed))
