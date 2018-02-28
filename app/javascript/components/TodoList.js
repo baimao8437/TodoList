@@ -22,7 +22,6 @@ class Features extends React.Component {
 
 class TodoList extends React.Component {
   constructor(props){
-    console.log(props);
     super(props);
     this.state = {
       counter: 0

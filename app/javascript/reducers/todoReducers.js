@@ -1,3 +1,5 @@
+import 'whatwg-fetch'
+
 const initState = {
     input: '',
     todos: []//{text,key,completed}
@@ -7,14 +9,16 @@ function todos(state = initState, action){
     switch(action.type){
         case 'ADD_TODO':
             if(action.database)
-                $.ajax({
-                    url: '/todo_list',
-                    type: 'POST',
-                    data: {
+                fetch('/todo_list',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'//important to add this
+                    },
+                    body: JSON.stringify({
                         text: action.text,
                         key: action.key,
                         completed: action.completed
-                    }
+                    })
                 })
             return {
                 ...state,
@@ -34,9 +38,8 @@ function todos(state = initState, action){
         case 'TOGGLE_TODO':
             state.todos.map((todo)=>{
                 if(todo.key == action.key)
-                    $.ajax({
-                        url: '/todo_list/'+todo.key,
-                        type: 'PATCH'
+                    fetch('/todo_list/'+todo.key,{
+                        method: 'PATCH'
                     })
             })
             return {
@@ -51,9 +54,8 @@ function todos(state = initState, action){
 
         case 'CLEAR_ALL':
             state.todos.map((todo)=>{
-                $.ajax({
-                    url: '/todo_list/'+todo.key,
-                    type: 'DELETE'
+                fetch('/todo_list/'+todo.key,{
+                    method: 'DELETE'
                 })
             })
             return {
@@ -63,12 +65,10 @@ function todos(state = initState, action){
         case 'CLEAR_TOGGLE':
             state.todos.map((todo)=>{
                 if(todo.completed)
-                    $.ajax({
-                        url: '/todo_list/'+todo.key,
-                        type: 'DELETE'
+                    fetch('/todo_list/'+todo.key,{
+                        method: 'DELETE'
                     })
             })
-            
             return {
                 ...state,
                 todos: state.todos.filter((todo)=>(!todo.completed))

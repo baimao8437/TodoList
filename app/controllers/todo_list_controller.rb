@@ -1,4 +1,5 @@
 class TodoListController < ApplicationController
+  skip_before_action :verify_authenticity_token #Or will cause 422 error
   def index
     @todos = Todo.all
   end
