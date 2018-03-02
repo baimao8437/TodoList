@@ -11,50 +11,29 @@ const initState = {
     todos: []//{text,key,completed}
 }
 
-function todos(state = initState, action){
-    switch(action.type){
-        case ADD_TODO:
-            return {
-                ...state,
-                todos: [...state.todos, {
-                    text: action.text,
-                    key: action.key,
-                    completed: action.completed
-                }]
-            }
-        
-        case INPUT_TODO:
-            return {
-                ...state,
-                input: action.text
-            }
-
-        case TOGGLE_TODO:
-            return {
-                ...state,
-                todos: state.todos.map((todo)=>(
-                    (todo.key==action.key)?{
-                        ...todo,
-                        completed: !todo.completed
-                    }:todo
-                ))
-            }
-
-        case CLEAR_ALL:
-            return {
-                ...state,
-                todos: []
-            }
-
-        case CLEAR_TOGGLE:
-            return {
-                ...state,
-                todos: state.todos.filter((todo)=>(!todo.completed))
-            }
-
-        default:
-            return state;
+const ACTION_HANDLERS = {
+    [ADD_TODO]: (state, { text, key, completed }) => {
+        let todos = [...state['todos'], { text, key, completed }];
+        return { ...state, todos };
+    },
+    [INPUT_TODO]: (state, { text }) => {
+        let input = text;
+        return { ...state, input };
+    },
+    [TOGGLE_TODO]: (state, { key }) => {
+        let todos = state['todos'].map((todo)=>((todo['key']==key)?{ ...todo, completed: !todo['completed'] }: todo));
+        return { ...state, todos };
+    },
+    [CLEAR_ALL]: (state, action) => ({ ...state, todos: []}),
+    [CLEAR_TOGGLE]: (state, action) => {
+        let todos = state['todos'].filter((todo)=>(!todo['completed']));
+        return { ...state, todos }
     }
+}
+
+function todos(state = initState, action){
+    const handler = ACTION_HANDLERS[action.type];
+    return handler ? handler(state, action) : state;
 }
 
 export default todos
