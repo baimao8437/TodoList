@@ -6,11 +6,6 @@ import {
     CLEAR_TOGGLE
 } from '../actions/todoActions.js'
 
-const initState = {
-    input: '',
-    todos: []//{text,key,completed}
-}
-
 const ACTION_HANDLERS = {
     [ADD_TODO]: (state, { text, key, completed }) => {
         let todos = [...state['todos'], { text, key, completed }];
@@ -31,7 +26,7 @@ const ACTION_HANDLERS = {
     }
 }
 
-function todos(state = initState, action){
+function todos(state = {}, action){
     const handler = ACTION_HANDLERS[action.type];
     return handler ? handler(state, action) : state;
 }
