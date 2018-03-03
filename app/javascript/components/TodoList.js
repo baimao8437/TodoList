@@ -28,8 +28,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClearAll: ()=>{
       dispatch(clearAll());
     },
-    handleClearToggle: (keys)=>{
-      dispatch(clearToggle(keys));
+    handleClearToggle: ()=>{
+      dispatch(clearToggle());
     }
   }
 }
@@ -83,11 +83,10 @@ class Features extends React.Component {
   }
   render(){
     const { todos, clearAll, clearToggle } = this.props;
-    let toggleKeys = todos.filter((todo)=>(todo.completed)).map((todo)=>(todo.key))
     return(
       <div>
-        <button onClick={clearAll}>Clear All</button>
-        <button onClick={()=>clearToggle(toggleKeys)}>Clear Toggled</button>
+        <button onClick={()=>clearAll()}>Clear All</button>
+        <button onClick={()=>clearToggle()}>Clear Toggled</button>
       </div>
     )
   }

@@ -6,8 +6,11 @@ export const TOGGLE_TODO = 'TOGGLE_TODO';
 export const CLEAR_ALL = 'CLEAR_ALL';
 export const CLEAR_TOGGLE = 'CLEAR_TOGGLE'
 
+function parseJSON(response) {
+    return response.json()
+}
 
-export function addTodo(text, key, completed, database) {
+export const addTodo = (text, key, completed, database) => dispatch => {
     if(database)
         fetch('/todo_list',{
             method: 'POST',
@@ -20,52 +23,80 @@ export function addTodo(text, key, completed, database) {
                 completed
             })
         })
-    return function (dispatch) {
-        setTimeout(() => {
-            dispatch({
-                type: ADD_TODO,
-                text,
-                key,
-                completed,
-                database
-            })
-        }, 2000)
-    }
+    setTimeout(() => {
+        dispatch({
+            type: ADD_TODO,
+            text,
+            key,
+            completed,
+            database
+        })
+    }, 2000)
 }
 
-export function inputTodo(text) {
-    return {
+export const inputTodo = text => ({
         type: INPUT_TODO,
         text
-    }
-}
+})
 
-export function toggleTodo(key) {
-    fetch('/todo_list/'+key,{
-        method: 'PATCH'
-    })
-    return {
-        type: TOGGLE_TODO,
-        key
-    }
-}
 
-export function clearAll(){
-    fetch('/todo_list/destroy_all',{
-        method: 'GET'
-    })
-    return {
-        type: CLEAR_ALL
-    }
-}
+export const toggleTodo = key => dispatch => {
+    fetch('/todo_list/'+key,{ method: 'GET' })
+    .then(parseJSON)
+    .then((json) => {
+        const completed = !json.completed;
+        
+        fetch('/todo_list/'+key, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                completed
+            })
+        });
 
-export function clearToggle(keys){
-    keys.forEach((key)=>{
-        fetch('/todo_list/'+key,{
-            method: 'DELETE'
+        dispatch({
+            type: TOGGLE_TODO,
+            key,
+            completed
         })
     })
-    return {
+}
+
+export const clearAll = () => (dispatch, getState) => {
+    const {todos} = getState();
+    let ids = [];
+    todos.forEach(({key})=>{ ids.push(key); })
+    fetch('/todo_list/bulk_destroy', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ids
+        })
+    })
+
+    dispatch({
+        type: CLEAR_ALL
+    })
+}
+
+export const clearToggle = () => (dispatch, getState) => {
+    const {todos} = getState();
+    let ids = [];
+    todos.forEach(({completed, key})=>{(completed && ids.push(key))})
+    fetch('/todo_list/bulk_destroy', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ids
+        })
+    })
+    dispatch({
         type: CLEAR_TOGGLE
-    }
+    })
 }

@@ -15,8 +15,8 @@ const ACTION_HANDLERS = {
         let input = text;
         return { ...state, input };
     },
-    [TOGGLE_TODO]: (state, { key }) => {
-        let todos = state['todos'].map((todo)=>((todo['key']==key)?{ ...todo, completed: !todo['completed'] }: todo));
+    [TOGGLE_TODO]: (state, { key, completed }) => {
+        let todos = state['todos'].map((todo)=>((todo['key']==key)?{ ...todo, completed}: todo));
         return { ...state, todos };
     },
     [CLEAR_ALL]: (state, action) => ({ ...state, todos: []}),
