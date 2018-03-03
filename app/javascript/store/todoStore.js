@@ -2,11 +2,16 @@ import { createStore, applyMiddleware } from 'redux'
 import Thunk from 'redux-thunk'
 import todos from '../reducers/todoReducers.js'
 
-const initState = {
-    input: '',
-    todos: []//{text,key,completed}
+export default (railsProps={}) => {
+    const { initTodos } =railsProps;
+
+    const initState = {
+        initTodos,
+        input: '',
+        todos: []//{text,key,completed}
+    }
+
+    let store = createStore(todos, initState, applyMiddleware(Thunk));
+
+    return store
 }
-
-let store = createStore(todos, initState, applyMiddleware(Thunk));
-
-export default store

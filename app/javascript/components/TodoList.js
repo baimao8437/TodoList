@@ -1,9 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { addTodo, inputTodo, toggleTodo, clearAll, clearToggle } from '../actions/todoActions'
+import { initList, addTodo, inputTodo, toggleTodo, clearAll, clearToggle } from '../actions/todoActions'
 
 import { connect, Provider } from 'react-redux'
-import store from '../store/todoStore.js'
+import createStoreWithRailsProps from '../store/todoStore.js'
 
 
 const mapStateToProps= ({ input, todos }) => {
@@ -12,11 +12,11 @@ const mapStateToProps= ({ input, todos }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleInitTodo: ({ text, key, completed }) =>{
-      dispatch(addTodo(text, key, completed, false));
+    handleInitList: () =>{
+      return dispatch(initList());
     },
     handleAddTodo: (text, key, completed)=>{
-      dispatch(addTodo(text, key, completed, true));
+      dispatch(addTodo(text, key, completed));
       dispatch(inputTodo(''));
     },
     handleInputTodo: (text)=>{
@@ -38,12 +38,8 @@ class TodoList extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      counter: 0
+      counter: props.handleInitList()
     }
-    props.initTodos.map((todo)=>{
-      props.handleInitTodo(todo);
-      this.state.counter = todo.key+1;
-    })
   }
   todoStyle(completed){
     return (completed)?{
@@ -95,8 +91,8 @@ class Features extends React.Component {
 const TodoListPage = connect(mapStateToProps, mapDispatchToProps)(TodoList)
 
 const TodoListApp = (props) => (
-    <Provider store={store}>
-        <TodoListPage initTodos={props.initTodos}/>
+    <Provider store={createStoreWithRailsProps(props)}>
+        <TodoListPage/>
     </Provider>
 )
 

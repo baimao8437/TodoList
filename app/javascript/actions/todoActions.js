@@ -1,5 +1,6 @@
 import 'whatwg-fetch'
 
+export const INIT_LIST = 'INIT_LIST';
 export const ADD_TODO = 'ADD_TODO';
 export const INPUT_TODO = 'INPUT_TODO';
 export const TOGGLE_TODO = 'TOGGLE_TODO';
@@ -10,26 +11,35 @@ function parseJSON(response) {
     return response.json()
 }
 
-export const addTodo = (text, key, completed, database) => dispatch => {
-    if(database)
-        fetch('/todo_list',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'//important to add this
-            },
-            body: JSON.stringify({
-                text,
-                key,
-                completed
-            })
+export const initList = () => (dispatch, getState) => {
+    let { initTodos } = getState();
+    if(initTodos.length == 0)
+        return 0;
+    dispatch({
+        type: INIT_LIST,
+        initTodos
+    })
+    return initTodos[initTodos.length-1].key + 1;
+}
+
+export const addTodo = (text, key, completed) => dispatch => {
+    fetch('/todo_list',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'//important to add this
+        },
+        body: JSON.stringify({
+            text,
+            key,
+            completed
         })
+    })
     setTimeout(() => {
         dispatch({
             type: ADD_TODO,
             text,
             key,
-            completed,
-            database
+            completed
         })
     }, 2000)
 }

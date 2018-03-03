@@ -1,4 +1,5 @@
 import {
+    INIT_LIST,
     ADD_TODO,
     INPUT_TODO,
     TOGGLE_TODO,
@@ -7,6 +8,10 @@ import {
 } from '../actions/todoActions.js'
 
 const ACTION_HANDLERS = {
+    [INIT_LIST]: (state, { initTodos })=>{
+        let todos = initTodos.map(({ text, key, completed })=>({ text, key, completed }));
+        return { ...state, todos };
+    },
     [ADD_TODO]: (state, { text, key, completed }) => {
         let todos = [...state['todos'], { text, key, completed }];
         return { ...state, todos };
